@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { STATS } from '../utils/mockData';
 import { Icons } from '../utils/Icons';
 import { useToast } from '../context/ToastContext';
-import { exportToPDF } from '../utils/pdfGenerator';
+import { exportToPDF, exportToCSV } from '../utils/pdfGenerator';
 
 // Custom Hook for Number Count Up Animation
 const useCountUp = (end, duration = 2000) => {
@@ -97,7 +97,7 @@ const AnalyticsDashboard = () => {
             <div className="section-header">
                 <h3 className="section-title">Growth & Revenue Analytics</h3>
                 <div className="header-tools">
-                    <button className="btn-premium btn-secondary" onClick={() => showToast(`Exporting ${activeTab} to CSV`, 'success')}><Icons.Download /> Export {activeTab} (CSV)</button>
+                    <button className="btn-premium btn-secondary" onClick={() => { exportToCSV(activeTab); showToast(`${activeTab} exported as CSV`, 'success'); }}><Icons.Download /> Export {activeTab} (CSV)</button>
                     <button className="btn-premium btn-primary" onClick={() => exportToPDF(`Analytics_${activeTab}`)}><Icons.FileText /> Export PDF</button>
                 </div>
             </div>

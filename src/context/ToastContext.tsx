@@ -1,7 +1,8 @@
 import React, { createContext, useState, useContext } from 'react';
 import { Icons } from '../utils/Icons';
 
-const ToastContext = createContext();
+type ShowToastFn = (message: string, type?: string) => void;
+const ToastContext = createContext<ShowToastFn>(() => { });
 export const useToast = () => useContext(ToastContext);
 
 export const ToastProvider = ({ children }) => {

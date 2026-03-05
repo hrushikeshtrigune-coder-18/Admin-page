@@ -51,7 +51,7 @@ const AnimatedStat = ({ label, targetValue, prefix = "", suffix = "", icon: Icon
 
 const Dashboard = () => {
     const showToast = useToast();
-    const { users, updateUserStatus } = useData();
+    const { users, kyc, updateUserStatus, updateKycStatus } = useData();
 
     const handleApprove = (id, name) => {
         updateUserStatus(id, 'Active');
@@ -98,11 +98,11 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {/* 2. Recent User Profiles Table */}
+                    {/* 2. New Registrations for Approval */}
                     <div className="glass-card animate-slide-up">
                         <div className="section-header" style={{ marginBottom: '20px' }}>
-                            <h3 className="section-title">Recent User Profiles</h3>
-                            <button className="btn-premium btn-outline">View All</button>
+                            <h3 className="section-title">New Registrations for Approval</h3>
+                            <button className="btn-premium btn-outline">View All Pending</button>
                         </div>
                         <div className="premium-table-container">
                             <table className="premium-table">
@@ -111,36 +111,42 @@ const Dashboard = () => {
                                         <th>Profile</th>
                                         <th>Details</th>
                                         <th>Role</th>
-                                        <th>Verification</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users.slice(0, 4).map(user => (
-                                        <tr key={user.id}>
-                                            <td>
-                                                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-kumkum)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-                                                    {user.name.charAt(0)}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div style={{ fontWeight: 600 }}>{user.name}</div>
-                                                <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>26 Yrs • Mumbai</div>
-                                            </td>
-                                            <td>
-                                                <span className={`status-badge ${user.role === 'Vendor' ? 'warning' : 'info'}`}>
-                                                    {user.role}
-                                                </span>
-                                            </td>
-                                            <td><span className={getBadgeClass(user.status)}>{user.status === 'Active' ? 'Verified' : user.status}</span></td>
-                                            <td>
-                                                <div style={{ display: 'flex', gap: '8px' }}>
-                                                    <button onClick={() => handleApprove(user.id, user.name)} className="btn-premium btn-action btn-primary" style={{ padding: '6px 12px' }}>Approve</button>
-                                                    <button onClick={() => handleReject(user.id, user.name)} className="btn-premium btn-action btn-secondary" style={{ padding: '6px 12px', background: 'transparent', color: 'var(--color-kumkum)', border: '1px solid var(--color-kumkum)' }}>Reject</button>
-                                                </div>
-                                            </td>
+                                    {users.filter(u => u.status === 'Pending').length > 0 ? (
+                                        users.filter(u => u.status === 'Pending').map(user => (
+                                            <tr key={user.id}>
+                                                <td>
+                                                    <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--color-kumkum)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
+                                                        {user.name.charAt(0)}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div style={{ fontWeight: 600 }}>{user.name}</div>
+                                                    <div style={{ fontSize: '0.8rem', color: '#6b7280' }}>Joined: {user.joined}</div>
+                                                </td>
+                                                <td>
+                                                    <span className={`status-badge ${user.role === 'Vendor' ? 'warning' : 'info'}`}>
+                                                        {user.role}
+                                                    </span>
+                                                </td>
+                                                <td><span className={getBadgeClass(user.status)}>{user.status}</span></td>
+                                                <td>
+                                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                                        <button onClick={() => handleApprove(user.id, user.name)} className="btn-premium btn-action btn-primary" style={{ padding: '6px 12px' }}>Approve</button>
+                                                        <button onClick={() => handleReject(user.id, user.name)} className="btn-premium btn-action btn-secondary" style={{ padding: '6px 12px', background: 'transparent', color: 'var(--color-kumkum)', border: '1px solid var(--color-kumkum)' }}>Reject</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan={5} style={{ textAlign: 'center', padding: '20px', color: '#6b7280' }}>No pending registrations</td>
                                         </tr>
-                                    ))}
+                                    )}
                                 </tbody>
                             </table>
                         </div>
@@ -154,14 +160,42 @@ const Dashboard = () => {
                     <div className="glass-card animate-slide-up" style={{ padding: '24px' }}>
                         <h3 className="section-title" style={{ marginBottom: '20px', fontSize: '1.1rem' }}>Pending Verification Queue</h3>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                            {[1, 2, 3].map(i => (
-                                <div key={i} style={{ padding: '16px', background: 'rgba(255,255,255,0.6)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(242, 149, 2, 0.15)' }}>
+                            {kyc.filter(k => k.status === 'Pending').map(item => (
+                                <div key={item.id} style={{ padding: '16px', background: 'rgba(255,255,255,0.6)', borderRadius: 'var(--radius-md)', border: '1px solid rgba(242, 149, 2, 0.15)' }}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                                        <span style={{ fontWeight: 600 }}>{item.name}</span>
+                                        <span className="status-badge warning" style={{ fontSize: '0.7rem' }}>{item.doc}</span>
+                                    </div>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <span style={{ fontWeight: 600 }}>ID: KYC-00{i}</span>
-                                        <span className="status-badge warning" style={{ cursor: 'default' }}>Review Docs</span>
+                                        <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>{item.id}</span>
+                                        <div style={{ display: 'flex', gap: '4px' }}>
+                                            <button
+                                                onClick={() => {
+                                                    updateKycStatus(item.id, 'Approved');
+                                                    showToast(`Verification for ${item.name} Approved`, 'success');
+                                                }}
+                                                className="btn-premium btn-action btn-primary"
+                                                style={{ padding: '4px 8px', fontSize: '0.7rem' }}
+                                            >
+                                                Verify
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    updateKycStatus(item.id, 'Rejected');
+                                                    showToast(`Verification for ${item.name} Rejected`, 'error');
+                                                }}
+                                                className="btn-premium btn-action btn-secondary"
+                                                style={{ padding: '4px 8px', fontSize: '0.7rem', background: 'transparent', color: 'var(--color-kumkum)', border: '1px solid var(--color-kumkum)' }}
+                                            >
+                                                Reject
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
+                            {kyc.filter(k => k.status === 'Pending').length === 0 && (
+                                <div style={{ textAlign: 'center', color: '#6b7280', fontSize: '0.9rem' }}>Queue is empty</div>
+                            )}
                         </div>
                     </div>
 

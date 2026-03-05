@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { MOCK_USERS, MOCK_KYC } from '../utils/mockData';
 
-const DataContext = createContext();
+const DataContext = createContext(null);
 
 export const DataProvider = ({ children }) => {
     // Initializing state from mock data

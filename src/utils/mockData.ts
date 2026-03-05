@@ -3,6 +3,8 @@ export const MOCK_KYC = [
     { id: 'KYC-102', name: 'Sita Verma', type: 'User', status: 'Approved', doc: 'Passport', date: '2026-03-02' },
     { id: 'KYC-103', name: 'Royal Mandap', type: 'Vendor', status: 'Rejected', doc: 'Business PAN', date: '2026-03-03' },
     { id: 'KYC-104', name: 'Alok Sharma', type: 'User', status: 'Pending', doc: 'Aadhar Card', date: '2026-03-04' },
+    { id: 'KYC-105', name: 'Rahul Gupta', type: 'User', status: 'Pending', doc: 'Driving License', date: '2026-03-05' },
+    { id: 'KYC-106', name: 'Sneha Patil', type: 'User', status: 'Pending', doc: 'Passport', date: '2026-03-05' },
 ];
 
 export const MOCK_USERS = [
@@ -10,6 +12,8 @@ export const MOCK_USERS = [
     { id: 'V-054', name: 'Delhi Caterers', role: 'Vendor', joined: '2026-02-10', status: 'Suspended', reports: 3 },
     { id: 'U-002', name: 'Priya Singh', role: 'User', joined: '2026-02-28', status: 'Active', reports: 1 },
     { id: 'V-012', name: 'Royal Mandap', role: 'Vendor', joined: '2025-11-20', status: 'Active', reports: 0 },
+    { id: 'U-105', name: 'Rahul Gupta', role: 'User', joined: '2026-03-05', status: 'Pending', reports: 0 },
+    { id: 'U-106', name: 'Sneha Patil', role: 'User', joined: '2026-03-05', status: 'Pending', reports: 0 },
 ];
 
 export const MOCK_REQUESTS = [

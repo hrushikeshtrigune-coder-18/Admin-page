@@ -159,10 +159,10 @@ body {
 
 .logo-wrapper {
   background: var(--color-akshid);
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 20px;
+  padding: 20px;
   width: 100%;
-  max-width: 160px;
+  max-width: 200px;
   aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
