@@ -1,14 +1,28 @@
 import React, { useState } from 'react';
-import { MOCK_KYC, MOCK_KYC_AUDIT, getBadgeClass } from '../utils/mockData';
+import { getBadgeClass, MOCK_KYC_AUDIT } from '../utils/mockData';
 import { Icons } from '../utils/Icons';
+import { useToast } from '../context/ToastContext';
+import { useData } from '../context/DataContext';
 
 const KYCManager = () => {
     const [activeTab, setActiveTab] = useState('Pending');
     const [searchTerm, setSearchTerm] = useState('');
+    const showToast = useToast();
+    const { kyc, updateKycStatus } = useData();
+
+    const handleApprove = (id) => {
+        updateKycStatus(id, 'Approved');
+        showToast(`${id} Approved Successfully`, 'success');
+    };
+
+    const handleReject = (id) => {
+        updateKycStatus(id, 'Rejected');
+        showToast(`${id} Rejected`, 'error');
+    };
 
     const tabs = ['Pending', 'Approved', 'Rejected', 'Re-Submission', 'Audit Logs'];
 
-    const filteredKYC = MOCK_KYC.filter(item => {
+    const filteredKYC = kyc.filter(item => {
         const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             item.id.toLowerCase().includes(searchTerm.toLowerCase());
 
@@ -26,7 +40,7 @@ const KYCManager = () => {
     );
 
     return (
-        <div className="glass-card animate-fade-in">
+        <div className="glass-card animate-slide-up">
             <div className="section-header">
                 <h3 className="section-title">KYC & Verification Hub</h3>
                 <div className="header-tools">
@@ -85,11 +99,11 @@ const KYCManager = () => {
                                             <td><span className={getBadgeClass(item.status)}>{item.status}</span></td>
                                             <td>
                                                 <div style={{ display: 'flex', gap: '8px' }}>
-                                                    <button className="btn-premium btn-action btn-view">Review Docs</button>
+                                                    <button className="btn-premium btn-action btn-view" onClick={() => showToast(`Opening Docs for ${item.id}`, 'success')}>Review Docs</button>
                                                     {item.status === 'Pending' && (
                                                         <>
-                                                            <button className="btn-premium btn-action btn-approve"><Icons.CheckCircle /> Approve</button>
-                                                            <button className="btn-premium btn-action btn-reject"><Icons.XCircle /> Reject</button>
+                                                            <button className="btn-premium btn-action btn-approve" onClick={() => handleApprove(item.id)}><Icons.CheckCircle /> Approve</button>
+                                                            <button className="btn-premium btn-action btn-reject" onClick={() => handleReject(item.id)}><Icons.XCircle /> Reject</button>
                                                         </>
                                                     )}
                                                 </div>

@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { MOCK_REQUESTS, getBadgeClass } from '../utils/mockData';
 import { Icons } from '../utils/Icons';
+import { useToast } from '../context/ToastContext';
+import { exportToPDF } from '../utils/pdfGenerator';
 
 const RequestMonitor = () => {
     const [activeTab, setActiveTab] = useState('Vendor Booking Requests');
     const [searchTerm, setSearchTerm] = useState('');
+    const showToast = useToast();
 
     const tabs = ['Interest Requests (User ↔ User)', 'Vendor Booking Requests', 'Disputes / Complaints', 'Chat Monitoring'];
 
@@ -20,7 +23,7 @@ const RequestMonitor = () => {
     });
 
     return (
-        <div className="glass-card animate-fade-in">
+        <div className="glass-card animate-slide-up">
             <div className="section-header">
                 <h3 className="section-title">Interaction & Booking Monitor</h3>
                 <div className="header-tools">
@@ -33,7 +36,7 @@ const RequestMonitor = () => {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <button className="btn-premium btn-secondary"><Icons.Download /> Export Log</button>
+                    <button className="btn-premium btn-secondary" onClick={() => exportToPDF(`RequestMonitor_${activeTab}`)}><Icons.Download /> Export Log (PDF)</button>
                 </div>
             </div>
 
@@ -52,17 +55,33 @@ const RequestMonitor = () => {
             <div className="premium-table-container">
                 <table className="premium-table">
                     {activeTab === 'Chat Monitoring' ? (
-                        <tbody>
-                            <tr>
-                                <td style={{ textAlign: 'center', padding: '60px', color: '#6b7280' }}>
-                                    <div style={{ fontSize: '2rem', marginBottom: '16px', color: 'var(--color-gold)' }}>
-                                        <Icons.Message />
-                                    </div>
-                                    <h4 style={{ color: 'var(--color-maroon)', marginBottom: '8px' }}>Real-time Chat Monitor Endpoint</h4>
-                                    <p>Select a flagged conversation from the Disputes tab to monitor chat history.</p>
-                                </td>
-                            </tr>
-                        </tbody>
+                        <>
+                            <thead>
+                                <tr>
+                                    <th>Session ID</th>
+                                    <th>Participants</th>
+                                    <th>Trigger Reason</th>
+                                    <th>Connection Status</th>
+                                    <th>Severity</th>
+                                    <th>Admin Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[
+                                    { id: 'CS-901', parts: 'U-012 ↔ U-089', reason: 'Abusive Keywords Detected', status: 'Live', sev: 'High' },
+                                    { id: 'CS-902', parts: 'U-441 ↔ V-012', reason: 'Off-platform contact share', status: 'Ended', sev: 'Medium' }
+                                ].map((chat, idx) => (
+                                    <tr key={idx}>
+                                        <td style={{ fontWeight: 600 }}>{chat.id}</td>
+                                        <td>{chat.parts}</td>
+                                        <td>{chat.reason}</td>
+                                        <td><span className={chat.status === 'Live' ? 'status-badge success' : 'status-badge info'}>{chat.status}</span></td>
+                                        <td><span className={chat.sev === 'High' ? 'status-badge danger' : 'status-badge warning'}>{chat.sev}</span></td>
+                                        <td><button className="btn-premium btn-action btn-view" onClick={() => showToast('Connecting to socket...', 'info')}>Monitor Chat</button></td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </>
                     ) : (
                         <>
                             <thead>
@@ -100,9 +119,9 @@ const RequestMonitor = () => {
                                             <td><span className={getBadgeClass(req.status)}>{req.status}</span></td>
                                             <td>
                                                 <div style={{ display: 'flex', gap: '8px' }}>
-                                                    <button className="btn-premium btn-action btn-view"><Icons.Message /> View Chat</button>
+                                                    <button className="btn-premium btn-action btn-view" onClick={() => showToast('Opening Chat Transcript', 'info')}><Icons.Message /> View Chat</button>
                                                     {req.status === 'Reported' && (
-                                                        <button className="btn-premium btn-action btn-reject" style={{ background: 'var(--color-maroon)' }}>Resolve Dispute</button>
+                                                        <button className="btn-premium btn-action btn-reject" style={{ background: 'var(--color-maroon)' }} onClick={() => showToast('Dispute Resolved', 'success')}>Resolve Dispute</button>
                                                     )}
                                                 </div>
                                             </td>
