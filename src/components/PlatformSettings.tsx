@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { MOCK_SYSTEM_AUDIT_LOGS, getBadgeClass } from '../utils/mockData';
 import { Icons } from '../utils/Icons';
+import { useToast } from '../context/ToastContext';
 
 const PlatformSettings = () => {
     const [activeTab, setActiveTab] = useState('General Settings');
+    const showToast = useToast();
     const tabs = ['General Settings', 'Roles & Permissions', 'Communications', 'API Config', 'System Audit Logs'];
 
     return (
-        <div className="glass-card animate-fade-in" style={{ padding: '32px' }}>
+        <div className="glass-card animate-slide-up" style={{ padding: '32px' }}>
             <div className="section-header" style={{ marginBottom: '24px' }}>
                 <h3 className="section-title">Platform Configuration & Administration</h3>
                 {activeTab !== 'System Audit Logs' ? (
-                    <button className="btn-premium btn-primary"><Icons.CheckCircle /> Save Changes</button>
+                    <button className="btn-premium btn-primary" onClick={() => showToast('Settings Saved Successfully', 'success')}><Icons.CheckCircle /> Save Changes</button>
                 ) : (
-                    <button className="btn-premium btn-secondary"><Icons.Download /> Export Audit</button>
+                    <button className="btn-premium btn-secondary" onClick={() => showToast('Audit Export Started', 'info')}><Icons.Download /> Export Audit</button>
                 )}
             </div>
 
@@ -30,7 +32,7 @@ const PlatformSettings = () => {
             </div>
 
             {activeTab === 'General Settings' && (
-                <div className="form-grid animate-fade-in">
+                <div className="form-grid animate-slide-up">
                     <div className="form-item">
                         <label>Global Commission Rate (%)</label>
                         <input type="number" defaultValue={10} min={1} max={100} />
@@ -70,7 +72,7 @@ const PlatformSettings = () => {
             )}
 
             {activeTab === 'System Audit Logs' && (
-                <div className="premium-table-container animate-fade-in">
+                <div className="premium-table-container animate-slide-up">
                     <table className="premium-table">
                         <thead>
                             <tr>
@@ -101,7 +103,7 @@ const PlatformSettings = () => {
             )}
 
             {(activeTab === 'Roles & Permissions' || activeTab === 'Communications' || activeTab === 'API Config') && (
-                <div style={{ textAlign: 'center', padding: '60px', color: '#6b7280' }} className="animate-fade-in">
+                <div style={{ textAlign: 'center', padding: '60px', color: '#6b7280' }} className="animate-slide-up">
                     <Icons.Settings />
                     <p style={{ marginTop: '16px' }}>{activeTab} module is under construction.</p>
                 </div>

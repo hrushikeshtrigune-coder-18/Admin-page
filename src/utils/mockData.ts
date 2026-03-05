@@ -38,12 +38,12 @@ export const MOCK_VENDOR_PERFORMANCE = [
 ];
 
 export const STATS = [
-    { label: 'Total Users', value: '12,450', icon: 'Users' },
-    { label: 'Total Vendors', value: '3,820', icon: 'Vendors' },
-    { label: 'Pending KYC Approvals', value: '145', icon: 'Shield' },
-    { label: 'Active Requests (User ↔ Vendor)', value: '890', icon: 'Message' },
-    { label: 'Today’s New Registrations', value: '64', icon: 'Users' },
-    { label: 'Revenue / Commission Overview', value: '₹4.2L', icon: 'Chart' },
+    { label: 'Total Users', value: '12,450', icon: 'Users', growth: '+12%', progress: 78 },
+    { label: 'Total Vendors', value: '3,820', icon: 'Vendors', growth: '+5%', progress: 65 },
+    { label: 'Pending KYC Approvals', value: '145', icon: 'Shield', growth: '-2%', progress: 30 },
+    { label: 'Active Requests (User ↔ Vendor)', value: '890', icon: 'Message', growth: '+18%', progress: 85 },
+    { label: 'Today’s New Registrations', value: '64', icon: 'Users', growth: '+24%', progress: 92 },
+    { label: 'Revenue / Commission Overview', value: '₹4.2L', icon: 'Chart', growth: '+15%', progress: 80 },
 ];
 
 export const getBadgeClass = (status) => {
